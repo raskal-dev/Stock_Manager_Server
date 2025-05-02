@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { hasPassword } from 'src/utils/has-password';
 
 @Injectable()
 export class UsersService {
@@ -10,8 +11,16 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.usersRepository.create({
+      name: createUserDto.name,
+      phone: createUserDto.phone,
+      email: createUserDto.email,
+      role: createUserDto.role,
+      isActive: createUserDto.isActive,
+      password: await hasPassword(createUserDto.password),
+    });
+    return await this.usersRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {

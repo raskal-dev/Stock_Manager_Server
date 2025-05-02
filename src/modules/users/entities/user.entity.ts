@@ -22,7 +22,7 @@ export class User {
     @Column({ type: "varchar", length: 10, nullable: false })
     role: Role;
 
-    @Column({ type: "boolean", default: false })
+    @Column({ type: "boolean", default: true })
     isActive: boolean;
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })

@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/users/entities/user.entity';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -14,8 +18,10 @@ import { User } from './modules/users/entities/user.entity';
       entities: [
         User,
       ],
+      autoLoadEntities: true,
       synchronize: true,
     }),
+    UsersModule,
   ],
 })
 export class AppModule {}

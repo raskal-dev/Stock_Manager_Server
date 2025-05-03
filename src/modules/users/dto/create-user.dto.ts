@@ -24,7 +24,7 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'Veuillez fournir un rôle' })
     role: Role;
 
-    @ApiProperty({ example: true, description: 'Statut de l\'utilisateur' })
+    @ApiProperty({ example: true, description: 'Statut du Compte de l\'utilisateur' })
     @IsNotEmpty({ message: 'Veuillez fournir un statut' })
     isActive: boolean;
 }

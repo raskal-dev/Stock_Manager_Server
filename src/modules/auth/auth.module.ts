@@ -9,15 +9,16 @@ import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
-    UsersModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    UsersModule,
   ],
 
   controllers: [AuthController],
   providers: [AuthService, UsersService, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

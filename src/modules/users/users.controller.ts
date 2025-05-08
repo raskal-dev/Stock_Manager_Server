@@ -27,18 +27,6 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Roles(Role.ADMIN)
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Roles(Role.ADMIN)
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
   @Roles(Role.USER)
   @Patch('me/password')
   updateMyPassword(@CurrentUser('id') id: number, @Body() dto: ChangePasswordDto) {
@@ -54,7 +42,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Get('me')
-  async getMe(@CurrentUser() user) {
+  async getMe(@CurrentUser('id') user) {
     return user;
   }
 
@@ -64,10 +52,22 @@ export class UsersController {
     return { ok: true };
   }
 
-  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('profile-test')
   test(@Req() req) {
     console.log('🎯 test req.user =', req.user);
     return req.user;
+  }
+
+  @Roles(Role.ADMIN)
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
+
+  @Roles(Role.ADMIN)
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
   }
 }

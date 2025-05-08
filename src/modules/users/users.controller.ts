@@ -33,12 +33,6 @@ export class UsersController {
     return this.usersService.changePassword(id, dto);
   }
 
-  @Roles(Role.ADMIN)
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
-
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Get('me')
@@ -69,5 +63,11 @@ export class UsersController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Roles(Role.ADMIN)
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 }

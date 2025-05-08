@@ -11,6 +11,16 @@ async function bootstrap() {
     .setDescription('OpenAPI for Stock Manager Server API')
     .setVersion('1.0')
     .addTag('Stock Manager')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'token',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);

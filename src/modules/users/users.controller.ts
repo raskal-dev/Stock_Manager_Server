@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,10 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from 'src/utils/role.enum';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -45,5 +49,25 @@ export class UsersController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('me')
+  async getMe(@CurrentUser() user) {
+    return user;
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('test')
+  testAdmin() {
+    return { ok: true };
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('profile-test')
+  test(@Req() req) {
+    console.log('🎯 test req.user =', req.user);
+    return req.user;
   }
 }
